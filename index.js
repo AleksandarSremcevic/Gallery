@@ -1,5 +1,5 @@
-/* scripts.js */
 document.addEventListener("DOMContentLoaded", () => {
+    /* Overlay for Image Preview */
     const animatedItems = document.querySelectorAll(".animated-item");
     const overlay = document.createElement("div");
     overlay.classList.add("overlay");
@@ -26,40 +26,44 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
+    /* Expandable Menu - Show/Hide */
     const expandButtons = document.querySelectorAll(".expand-button");
+
     expandButtons.forEach(button => {
+        const menu = button.nextElementSibling;
+        menu.style.display = "none"; // Hide menu by default
+
         button.addEventListener("click", (e) => {
             e.stopPropagation();
-            const menu = button.nextElementSibling;
-            menu.style.display = menu.style.display === "block" ? "none" : "block";
-            button.innerHTML = menu.style.display === "block" ? "&#x25B2;" : "&#x25BC;";
+            if (menu.style.display === "none") {
+                menu.style.display = "grid";
+                button.innerHTML = "&#x25B2;"; // Show Less
+            } else {
+                menu.style.display = "none";
+                button.innerHTML = "&#x22EE;"; // Show More
+            }
         });
     });
 
-    document.body.addEventListener("click", () => {
-        document.querySelectorAll(".menu").forEach(menu => {
-            menu.style.display = "none";
-        });
-        document.querySelectorAll(".expand-button").forEach(button => {
-            button.innerHTML = "&#x25BC;";
-        });
-    });
-
-    const menuImages = document.querySelectorAll(".menu img");
-    menuImages.forEach(image => {
-        image.addEventListener("click", (e) => {
+    /* Clickable Images in Expanded Menu */
+    const menuItems = document.querySelectorAll(".menu img, .menu video");
+    menuItems.forEach(item => {
+        item.addEventListener("click", (e) => {
             e.stopPropagation();
-            overlayImg.src = image.src;
-            overlay.style.display = "flex";
+            if (item.tagName.toLowerCase() === 'video') {
+                const url = item.getAttribute('data-url');
+                window.open(url, '_blank');
+            } else {
+                overlayImg.src = item.src;
+                overlay.style.display = "flex";
+            }
         });
     });
-});
 
-/* scripts.js */
-document.addEventListener("DOMContentLoaded", () => {
+    /* Burger Menu for Navigation */
     const burgerMenu = document.querySelector(".burger-menu");
     const menuContainer = document.querySelector(".menu-container");
-    
+
     burgerMenu.addEventListener("click", () => {
         menuContainer.classList.toggle("active");
     });
